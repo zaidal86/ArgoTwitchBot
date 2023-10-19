@@ -5,6 +5,16 @@ import { financial } from '../utils/financial.js';
 import { twitchClient } from '../../main.js';
 import mongoose from 'mongoose';
 
+const extractQueueData = (queueData) => {
+    return {
+        tier: queueData ? queueData.tier : 'undefined',
+        rank: queueData ? queueData.rank : 'undefined',
+        wins: queueData ? queueData.wins : 'undefined',
+        losses: queueData ? queueData.losses : 'undefined',
+        leaguePoints: queueData ? queueData.leaguePoints : 'undefined'
+    };
+};
+
 export const listenCommands = async (channel, tags, command) => {
     console.log(command)
     const SchemaCommands = mongoose.model('command', SchemaCommand);
@@ -23,15 +33,24 @@ export const listenCommands = async (channel, tags, command) => {
 
                 case 'lol':
                     const UserStats = await getRank('missargo');
-                    const extractedData = UserStats.map(entry => ({
-                        tier: entry.tier,
-                        rank: entry.rank,
-                        leaguePoints: entry.leaguePoints,
-                        wins: entry.wins,
-                        losses: entry.losses
-                    }));
-                    const outputLOL = data.output.replace('{rank}', extractedData[0].rank).replace('{tier}', extractedData[0].tier)
-                        .replace('{leaguePoints}', extractedData[0].leaguePoints).replace('{wins}', extractedData[0].wins).replace('{losses}', extractedData[0].losses);
+
+                    const soloQueueData = UserStats.find(entry => entry.queueType === 'RANKED_SOLO_5x5');
+                    const flexQueueData = UserStats.find(entry => entry.queueType === 'RANKED_FLEX_SR');
+
+                    const extractedSoloQueueData = extractQueueData(soloQueueData);
+                    const extractedFlexQueueData = extractQueueData(flexQueueData);
+
+                    const outputLOL = data.output
+                        .replace('{soloRank}', extractedSoloQueueData.rank)
+                        .replace('{soloTier}', extractedSoloQueueData.tier)
+                        .replace('{soloLeaguePoints}', extractedSoloQueueData.leaguePoints)
+                        .replace('{soloWins}', extractedSoloQueueData.wins)
+                        .replace('{soloLosses}', extractedSoloQueueData.losses)
+                        .replace('{flexRank}', extractedFlexQueueData.rank)
+                        .replace('{flexTier}', extractedFlexQueueData.tier)
+                        .replace('{flexLeaguePoints}', extractedFlexQueueData.leaguePoints)
+                        .replace('{flexWins}', extractedFlexQueueData.wins)
+                        .replace('{flexLosses}', extractedFlexQueueData.losses);
                     twitchClient.say(channel, outputLOL);
                     break;
 
