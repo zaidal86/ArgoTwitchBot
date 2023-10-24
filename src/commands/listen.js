@@ -11,7 +11,8 @@ const extractQueueData = (queueData) => {
         rank: queueData ? queueData.rank : 'undefined',
         wins: queueData ? queueData.wins : 'undefined',
         losses: queueData ? queueData.losses : 'undefined',
-        leaguePoints: queueData ? queueData.leaguePoints : 'undefined'
+        leaguePoints: queueData ? queueData.leaguePoints : 'undefined',
+        winRate: queueData ? financial(((queueData.wins / (queueData.wins + queueData.losses)) * 100), 0) : 'undefined'
     };
 };
 
@@ -24,7 +25,7 @@ export const listenCommands = async (channel, tags, command) => {
         if (data.func) {
             switch (data.func) {
                 case 'osu':
-                    const { levelOSU, accuracy, pp: { raw: pp, rankOSU, countryRank }, counts: { A, S, SH, SS, SSH, plays } } = await getUser();
+                    const { levelOSU, accuracy, pp: { raw: pp, rank: rankOSU, countryRank }, counts: { A, S, SH, SS, SSH, plays } } = await getUser();
                     const outputOSU = data.output.replace('{rank}', rankOSU).replace('{pp}', pp).replace('{rankPays}', countryRank).replace('{level}', financial(levelOSU, 0))
                         .replace('{accuracy}', financial(accuracy)).replace('{A}', A).replace('{S}', S).replace('{SS}', SS).replace('{SH}', SH).replace('{SSH}', SSH)
                         .replace('{plays}', plays)
@@ -46,11 +47,13 @@ export const listenCommands = async (channel, tags, command) => {
                         .replace('{soloLeaguePoints}', extractedSoloQueueData.leaguePoints)
                         .replace('{soloWins}', extractedSoloQueueData.wins)
                         .replace('{soloLosses}', extractedSoloQueueData.losses)
+                        .replace('{soloWinRate}', extractedSoloQueueData.winRate)
                         .replace('{flexRank}', extractedFlexQueueData.rank)
                         .replace('{flexTier}', extractedFlexQueueData.tier)
                         .replace('{flexLeaguePoints}', extractedFlexQueueData.leaguePoints)
                         .replace('{flexWins}', extractedFlexQueueData.wins)
-                        .replace('{flexLosses}', extractedFlexQueueData.losses);
+                        .replace('{flexLosses}', extractedFlexQueueData.losses)
+                        .replace('{flexWinRate}', extractedFlexQueueData.winRate);
                     twitchClient.say(channel, outputLOL);
                     break;
 
