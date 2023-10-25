@@ -23,6 +23,7 @@ const sayHello = (channel, tags, self) => {
 };
 
 const linkOsu = async (channel, tags, message, self) => {
+    if (!(process.env.NODE_OSU === 'true')) return;
     if (self) return;
     const osuLinkRegex = /(https?:\/\/)?osu\.ppy\.sh\/(beatmapsets\/(\d+)#osu\/(\d+))/i;
 
@@ -31,8 +32,8 @@ const linkOsu = async (channel, tags, message, self) => {
     if (match) {
         const lastNumber = match[4];
         const string = await getBeatmaps(lastNumber);
-        if (string) return twitchClient.say(channel, string);
-    };
+        twitchClient.say(channel, string);
+    }
 };
 
 export const message = (channel, tags, message, self) => {
