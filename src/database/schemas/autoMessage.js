@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export const SchemaCommand = new mongoose.Schema({
+export const SchemaMessage = new mongoose.Schema({
     message: {
         type: String,
         required: true
