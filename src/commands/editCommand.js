@@ -1,5 +1,4 @@
 import { SchemaCommand } from '../database/schemas/command.js';
-import { dateString } from '../utils/time.js';
 import { twitchClient } from '../../main.js';
 import mongoose from 'mongoose';
 
