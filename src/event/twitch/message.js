@@ -4,6 +4,7 @@ import { removeCommands } from '../../commands/removeCommand.js';
 import { listenCommands } from '../../commands/listen.js';
 import { getBeatmaps } from '../../api/Osu/getBeatmap.js';
 import { editCommands } from '../../commands/editCommand.js';
+import { addMessage } from '../../commands/addMessage.js';
 import { twitchClient } from '../../../main.js';
 
 const user = [];
@@ -48,5 +49,6 @@ export const message = (channel, tags, message, self) => {
     if (command === '!create') return createCommands(channel, tags, args);
     if (command === '!remove') return removeCommands(channel, tags, args);
     if (command === '!edit') return editCommands(channel, tags, args);
+    if (command === '!addmessage') return addMessage(channel, tags, message);
     return listenCommands(channel, tags, command);
 }
