@@ -1,9 +1,9 @@
 import { sendMessageForLogs } from '../../utils/discordSendMessage.js';
-import { createCommands } from '../../commands/create.js';
-import { removeCommands } from '../../commands/remove.js';
+import { createCommands } from '../../commands/createCommand.js';
+import { removeCommands } from '../../commands/removeCommand.js';
 import { listenCommands } from '../../commands/listen.js';
 import { getBeatmaps } from '../../api/Osu/getBeatmap.js';
-import { editCommands } from '../../commands/edit.js';
+import { editCommands } from '../../commands/editCommand.js';
 import { twitchClient } from '../../../main.js';
 
 const user = [];
